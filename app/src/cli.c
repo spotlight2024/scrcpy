@@ -114,6 +114,7 @@ enum {
     OPT_NO_VD_SYSTEM_DECORATIONS,
     OPT_NO_VD_DESTROY_CONTENT,
     OPT_DISPLAY_IME_POLICY,
+    OPT_USER,
 };
 
 struct sc_option {
@@ -1062,6 +1063,13 @@ static const struct sc_option options[] = {
         .argdesc = "value",
         .text = "Set the initial window height.\n"
                 "Default is 0 (automatic).",
+    },
+    {
+        .longopt_id = OPT_USER,
+        .longopt = "user",
+        .argdesc = "id",
+        .text = "Specify the user ID for Spotlight capture.\n"
+                "This enables SpotlightCapture mode instead of regular screen capture.",
     },
 };
 
@@ -2820,6 +2828,9 @@ parse_args_with_getopt(struct scrcpy_cli_args *args, int argc, char *argv[],
                                               &opts->display_ime_policy)) {
                     return false;
                 }
+                break;
+            case OPT_USER:
+                opts->user = atoi(optarg);
                 break;
             default:
                 // getopt prints the error message on stderr

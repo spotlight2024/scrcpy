@@ -432,6 +432,9 @@ execute_server(struct sc_server *server,
     if (params->list & SC_OPTION_LIST_APPS) {
         ADD_PARAM("list_apps=true");
     }
+    if (params->user != -1) {
+        ADD_PARAM("user=%d", params->user);
+    }
 
 #undef ADD_PARAM
 

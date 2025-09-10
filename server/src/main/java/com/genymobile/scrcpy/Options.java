@@ -73,6 +73,9 @@ public class Options {
     private boolean listCameras;
     private boolean listCameraSizes;
     private boolean listApps;
+    
+    // Spotlight user parameter
+    private int spotlightUser = -1;
 
     // Options not used by the scrcpy client, but useful to use scrcpy-server directly
     private boolean sendDeviceMeta = true; // send device name and size
@@ -230,6 +233,10 @@ public class Options {
 
     public NewDisplay getNewDisplay() {
         return newDisplay;
+    }
+    
+    public int getSpotlightUser() {
+        return spotlightUser;
     }
 
     public Orientation getCaptureOrientation() {
@@ -490,6 +497,9 @@ public class Options {
                     break;
                 case "display_ime_policy":
                     options.displayImePolicy = parseDisplayImePolicy(value);
+                    break;
+                case "user":
+                    options.spotlightUser = Integer.parseInt(value);
                     break;
                 case "send_device_meta":
                     options.sendDeviceMeta = Boolean.parseBoolean(value);

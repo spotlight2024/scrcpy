@@ -20,6 +20,7 @@ import com.genymobile.scrcpy.util.LogUtils;
 import com.genymobile.scrcpy.video.CameraCapture;
 import com.genymobile.scrcpy.video.NewDisplayCapture;
 import com.genymobile.scrcpy.video.ScreenCapture;
+import com.genymobile.scrcpy.video.SpotlightCapture;
 import com.genymobile.scrcpy.video.SurfaceCapture;
 import com.genymobile.scrcpy.video.SurfaceEncoder;
 import com.genymobile.scrcpy.video.VideoSource;
@@ -141,7 +142,10 @@ public final class Server {
                 SurfaceCapture surfaceCapture;
                 if (options.getVideoSource() == VideoSource.DISPLAY) {
                     NewDisplay newDisplay = options.getNewDisplay();
-                    if (newDisplay != null) {
+                    if (options.getSpotlightUser() > 0) {
+                        // Use SpotlightCapture when user parameter is provided
+                        surfaceCapture = new SpotlightCapture(controller, options);
+                    } else if (newDisplay != null) {
                         surfaceCapture = new NewDisplayCapture(controller, options);
                     } else {
                         assert options.getDisplayId() != Device.DISPLAY_ID_NONE;
