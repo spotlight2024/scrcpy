@@ -9,6 +9,7 @@ import android.view.Surface;
 
 import com.genymobile.scrcpy.AndroidVersions;
 import com.genymobile.scrcpy.Options;
+import com.genymobile.scrcpy.SpotlightApi;
 import com.genymobile.scrcpy.control.PositionMapper;
 import com.genymobile.scrcpy.device.ConfigurationException;
 import com.genymobile.scrcpy.device.Device;
@@ -49,11 +50,7 @@ public class SpotlightCapture extends SurfaceCapture {
     public SpotlightCapture(VirtualDisplayListener vdListener, Options options) {
         this.vdListener = vdListener;
         this.userId = options.getSpotlightUser();
-        try {
-            displayId = Integer.parseInt(Spotlight.getService().getEnvData(userId).executeInfo.displayId);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        displayId = options.getDisplayId();
         assert displayId != Device.DISPLAY_ID_NONE;
         this.maxSize = options.getMaxSize();
         this.crop = options.getCrop();
@@ -62,6 +59,7 @@ public class SpotlightCapture extends SurfaceCapture {
         assert captureOrientationLock != null;
         assert captureOrientation != null;
         this.angle = options.getAngle();
+        Ln.i("正在使用系统API捕捉画面, display-id=" + displayId);
     }
 
     @Override
@@ -124,11 +122,7 @@ public class SpotlightCapture extends SurfaceCapture {
 
 
         // 设置用于编码的surface
-        try {
-            Objects.requireNonNull(Spotlight.getService()).setSurfaceByUser(userId, surface);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        SpotlightApi.setSurfaceByUser(userId, surface);
 
         if (vdListener != null) {
             PositionMapper positionMapper;

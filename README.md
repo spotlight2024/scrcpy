@@ -4,6 +4,11 @@ their name contains `scrcpy`.**
 
 # scrcpy (v3.3.2)
 
+## 修改内容：
+1. 使用系统API直接捕获画面，避免增加一个屏幕镜像，增加开销。
+2. 增加--user=10/11参数，直接串流到用户所在画面。
+3. 默认关闭音频串流，以避免额外消耗。如果需要，使用audio=true参数打开。
+
 <img src="app/data/icon.svg" width="128" height="128" alt="scrcpy" align="right" />
 
 _pronounced "**scr**een **c**o**py**"_

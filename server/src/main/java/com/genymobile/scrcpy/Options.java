@@ -533,6 +533,11 @@ public class Options {
             options.displayId = Device.DISPLAY_ID_NONE;
         }
 
+        if (options.spotlightUser > 0) {
+            options.displayId = SpotlightApi.getDisplayIdFromUserId(options.spotlightUser);
+            Ln.i("Replace display-id " + options.displayId);
+        }
+
         return options;
     }
 
