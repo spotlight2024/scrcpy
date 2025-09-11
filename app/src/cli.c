@@ -2552,14 +2552,14 @@ parse_args_with_getopt(struct scrcpy_cli_args *args, int argc, char *argv[],
                 opts->push_target = optarg;
                 break;
             case OPT_PREFER_TEXT:
-                if (opts->key_inject_mode != SC_KEY_INJECT_MODE_MIXED) {
+                if (opts->key_inject_mode == SC_KEY_INJECT_MODE_RAW) {
                     LOGE("--prefer-text is incompatible with --raw-key-events");
                     return false;
                 }
                 opts->key_inject_mode = SC_KEY_INJECT_MODE_TEXT;
                 break;
             case OPT_RAW_KEY_EVENTS:
-                if (opts->key_inject_mode != SC_KEY_INJECT_MODE_MIXED) {
+                if (opts->key_inject_mode == SC_KEY_INJECT_MODE_TEXT) {
                     LOGE("--prefer-text is incompatible with --raw-key-events");
                     return false;
                 }
