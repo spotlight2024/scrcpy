@@ -1,13 +1,8 @@
 package com.genymobile.scrcpy.video;
 
 import android.graphics.Rect;
-import android.os.Build;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.service.spotlight.Spotlight;
 import android.view.Surface;
 
-import com.genymobile.scrcpy.AndroidVersions;
 import com.genymobile.scrcpy.Options;
 import com.genymobile.scrcpy.SpotlightApi;
 import com.genymobile.scrcpy.control.PositionMapper;
@@ -23,10 +18,8 @@ import com.genymobile.scrcpy.util.AffineMatrix;
 import com.genymobile.scrcpy.util.Ln;
 import com.genymobile.scrcpy.util.LogUtils;
 import com.genymobile.scrcpy.wrappers.ServiceManager;
-import com.genymobile.scrcpy.wrappers.SurfaceControl;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class SpotlightCapture extends SurfaceCapture {
 
@@ -105,7 +98,6 @@ public class SpotlightCapture extends SurfaceCapture {
 
     @Override
     public void start(Surface surface) throws IOException {
-        removeCaptureSurface();
 
         Size inputSize;
         if (transform != null) {
@@ -127,11 +119,11 @@ public class SpotlightCapture extends SurfaceCapture {
         if (vdListener != null) {
             PositionMapper positionMapper;
 //            if (displayId == 0) {
-                // Surface control or main display: send all events to the original display, relative to the device size
-                Size deviceSize = displayInfo.getSize();
-                positionMapper = PositionMapper.create(videoSize, transform, deviceSize);
+            // Surface control or main display: send all events to the original display, relative to the device size
+            Size deviceSize = displayInfo.getSize();
+            positionMapper = PositionMapper.create(videoSize, transform, deviceSize);
 //            } else {
-                // The positions are relative to the virtual display, not the original display (so use inputSize, not deviceSize!)
+            // The positions are relative to the virtual display, not the original display (so use inputSize, not deviceSize!)
 //                positionMapper = PositionMapper.create(videoSize, transform, inputSize);
 //            }
             vdListener.onNewVirtualDisplay(displayId, positionMapper);
@@ -149,15 +141,7 @@ public class SpotlightCapture extends SurfaceCapture {
     @Override
     public void release() {
         displaySizeMonitor.stopAndRelease();
-        removeCaptureSurface();
-    }
-
-    private void removeCaptureSurface() {
-        try {
-            Objects.requireNonNull(Spotlight.getService()).setSurfaceByUser(userId, null);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        SpotlightApi.clearSurfaceByUser(userId);
     }
 
     @Override

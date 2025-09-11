@@ -25,7 +25,7 @@ public class Options {
     private Ln.Level logLevel = Ln.Level.DEBUG;
     private int scid = -1; // 31-bit non-negative value, or -1
     private boolean video = true;
-    private boolean audio = true;
+    private boolean audio = false;
     private int maxSize;
     private VideoCodec videoCodec = VideoCodec.H264;
     private AudioCodec audioCodec = AudioCodec.OPUS;

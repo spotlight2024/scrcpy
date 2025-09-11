@@ -14,6 +14,7 @@ import android.system.Os;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * Handle the cleanup of scrcpy, even if the main process is killed.
@@ -115,15 +116,18 @@ public final class CleanUp {
 
         boolean powerOffScreen = options.getPowerOffScreenOnClose();
 
+        // Spotlight cleanup
+        int spotlightUser = options.getSpotlightUser();
+        
         try {
-            run(displayId, restoreStayOn, disableShowTouches, powerOffScreen, restoreScreenOffTimeout, restoreDisplayImePolicy);
+            run(displayId, restoreStayOn, disableShowTouches, powerOffScreen, restoreScreenOffTimeout, restoreDisplayImePolicy, spotlightUser);
         } catch (IOException e) {
             Ln.e("Clean up I/O exception", e);
         }
     }
 
     private void run(int displayId, int restoreStayOn, boolean disableShowTouches, boolean powerOffScreen, int restoreScreenOffTimeout,
-            int restoreDisplayImePolicy) throws IOException {
+            int restoreDisplayImePolicy, int spotlightUser) throws IOException {
         String[] cmd = {
                 "app_process",
                 "/",
@@ -134,6 +138,7 @@ public final class CleanUp {
                 String.valueOf(powerOffScreen),
                 String.valueOf(restoreScreenOffTimeout),
                 String.valueOf(restoreDisplayImePolicy),
+                String.valueOf(spotlightUser),
         };
 
         ProcessBuilder builder = new ProcessBuilder(cmd);
@@ -203,6 +208,7 @@ public final class CleanUp {
         boolean powerOffScreen = Boolean.parseBoolean(args[3]);
         int restoreScreenOffTimeout = Integer.parseInt(args[4]);
         int restoreDisplayImePolicy = Integer.parseInt(args[5]);
+        int spotlightUser = args.length > 6 ? Integer.parseInt(args[6]) : -1;
 
         // Dynamic option
         boolean restoreDisplayPower = false;
@@ -219,7 +225,10 @@ public final class CleanUp {
             // Expected when the server is dead
         }
 
-        Ln.i("Cleaning up");
+        Ln.i("Cleaning up, " + Arrays.toString(args));
+
+        // Clean up Spotlight surface if needed
+        SpotlightApi.clearSurfaceByUser(spotlightUser);
 
         if (disableShowTouches) {
             Ln.i("Disabling \"show touches\"");

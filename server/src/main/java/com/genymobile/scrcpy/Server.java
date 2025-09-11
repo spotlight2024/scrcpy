@@ -143,14 +143,14 @@ public final class Server {
                 if (options.getVideoSource() == VideoSource.DISPLAY) {
                     NewDisplay newDisplay = options.getNewDisplay();
                     int userId = options.getSpotlightUser();
-                    if (userId > 0 && SpotlightApi.getSurfaceByUserId(userId) == null) {
+                    if (userId > 0 && SpotlightApi.systemVersion >= 1 && SpotlightApi.getSurfaceByUserId(userId) == null) {
                         // 多用户+没有串流surface，使用SpotlightCapture流程添加串流；如果有surface，走下面镜像流程，避免把已有串流打断
                         surfaceCapture = new SpotlightCapture(controller, options);
                     } else if (newDisplay != null) {
                         surfaceCapture = new NewDisplayCapture(controller, options);
                     } else {
                         assert options.getDisplayId() != Device.DISPLAY_ID_NONE;
-                        if (userId > 0) {
+                        if (userId > 0 && SpotlightApi.systemVersion >= 1) {
                             Ln.i("有人正在串流中，你将使用镜像画面。如果对方关掉串流，你的画面会被暂停，需要你重新发起一次串流");
                         }
                         surfaceCapture = new ScreenCapture(controller, options);
