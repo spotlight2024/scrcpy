@@ -537,17 +537,21 @@ public class Options {
         if (options.spotlightUser > 0) {
             options.displayId = SpotlightApi.getDisplayIdFromUserId(options.spotlightUser);
             Ln.i("Replace display-id " + options.displayId);
-        }
 
-        try {
-            if (SpotlightApi.systemVersion >= 1 && SpotlightApi.getSurfaceByUserId(options.spotlightUser) == null) {
-                Ln.i("使用系统API捕捉画面");
-            } else {
-                Ln.i("有人正在串流中，你将使用镜像画面。如果对方关掉串流，你的画面会被暂停，需要你重新发起一次串流");
-                options.spotlightUser = -1;
+            try {
+                if (SpotlightApi.systemVersion >= 1) {
+                    if (SpotlightApi.getSurfaceByUserId(options.spotlightUser) == null) {
+                        Ln.i("使用系统API捕捉画面");
+                    } else {
+                        Ln.i("有人正在串流中，你将使用镜像画面。如果对方关掉串流，你的画面会被暂停，需要你重新发起一次串流");
+                        options.spotlightUser = -1;
+                    }
+                } else {
+                    options.spotlightUser = -1;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
         return options;

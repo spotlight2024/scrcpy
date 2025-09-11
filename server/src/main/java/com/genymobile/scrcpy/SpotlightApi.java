@@ -7,7 +7,6 @@ import android.view.Surface;
 import com.genymobile.scrcpy.util.Ln;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class SpotlightApi {
 
@@ -16,7 +15,8 @@ public class SpotlightApi {
     static {
         try {
             systemVersion = Spotlight.SYSTEM.VERSION;
-        } catch (Exception e) {
+            getSurfaceByUserId(0);
+        } catch (NoSuchMethodError|Exception e) {
             systemVersion = -1;
         }
         Ln.i("Spotlight Version: " + systemVersion);
@@ -33,15 +33,11 @@ public class SpotlightApi {
         }
     }
 
-    public static Surface getSurfaceByUserId(int userId) throws IOException {
+    public static Surface getSurfaceByUserId(int userId) throws Exception {
         if (systemVersion < 1) {
-            throw new IOException("系统版本过老，不支持 --user");
+            throw new Exception("系统版本过老，不支持 --user");
         }
-        try {
-            return Spotlight.getService().getSurfaceByUser(userId);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        return Spotlight.getService().getSurfaceByUser(userId);
     }
 
     public static void setSurfaceByUser(int userId, Surface surface) throws IOException {
