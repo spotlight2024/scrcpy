@@ -35,7 +35,7 @@ public class SpotlightApi {
 
     public static Surface getSurfaceByUserId(int userId) throws IOException {
         if (systemVersion < 1) {
-            throw new IOException("系统版本过老，不支持");
+            throw new IOException("系统版本过老，不支持 --user");
         }
         try {
             return Spotlight.getService().getSurfaceByUser(userId);

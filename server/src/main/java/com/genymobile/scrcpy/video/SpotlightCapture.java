@@ -52,7 +52,6 @@ public class SpotlightCapture extends SurfaceCapture {
         assert captureOrientationLock != null;
         assert captureOrientation != null;
         this.angle = options.getAngle();
-        Ln.i("正在使用系统API捕捉画面, display-id=" + displayId);
     }
 
     @Override
