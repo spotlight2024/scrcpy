@@ -6,6 +6,9 @@ on:
       name:
         description: 'Version name (default is ref name)'
 
+permissions:
+  contents: write
+
 env:
   # $VERSION is used by release scripts
   VERSION: ${{ github.event.inputs.name || github.ref_name }}
